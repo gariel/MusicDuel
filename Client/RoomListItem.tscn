@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://coex0rg2j0n2d"]
+
+[ext_resource type="Script" path="res://source/RoomListItem.cs" id="1_ny1fb"]
+
+[node name="RoomListItem" type="HBoxContainer"]
+offset_right = 508.0
+offset_bottom = 49.0
+script = ExtResource("1_ny1fb")
+
+[node name="lblId" type="Label" parent="."]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+text = "[room id]"
+
+[node name="lblOwner" type="Label" parent="."]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "[room owner]"
+
+[node name="btnJoin" type="Button" parent="."]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Join"
+
+[connection signal="pressed" from="btnJoin" to="." method="_on_btn_join_pressed"]

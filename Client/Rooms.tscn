@@ -1,0 +1,46 @@
+[gd_scene load_steps=2 format=3 uid="uid://dnwt437u8tdu1"]
+
+[ext_resource type="Script" path="res://source/Rooms.cs" id="1_undgr"]
+
+[node name="Rooms" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_undgr")
+metadata/_edit_lock_ = true
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 44.0
+offset_top = 15.0
+offset_right = 191.0
+offset_bottom = 78.0
+theme_override_font_sizes/font_size = 30
+text = "Rooms"
+
+[node name="vboxRooms" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 72.0
+offset_right = 1120.0
+offset_bottom = 612.0
+metadata/_edit_lock_ = true
+
+[node name="req" type="HTTPRequest" parent="."]
+
+[node name="reqCreate" type="HTTPRequest" parent="."]
+
+[node name="btnCreate" type="Button" parent="."]
+layout_mode = 0
+offset_left = 887.0
+offset_top = 29.0
+offset_right = 1116.0
+offset_bottom = 62.0
+text = "Create Room"
+
+[connection signal="request_completed" from="req" to="." method="_on_http_request_request_completed"]
+[connection signal="request_completed" from="reqCreate" to="." method="_on_req_create_request_completed"]
+[connection signal="pressed" from="btnCreate" to="." method="_on_btn_create_pressed"]

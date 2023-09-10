@@ -1,0 +1,87 @@
+[gd_scene load_steps=2 format=3 uid="uid://bv84vnajgegam"]
+
+[ext_resource type="Script" path="res://source/Login.cs" id="1_etr0c"]
+
+[node name="Login" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_etr0c")
+metadata/_edit_lock_ = true
+
+[node name="txtUserName" type="TextEdit" parent="."]
+layout_mode = 0
+offset_left = 350.0
+offset_top = 199.0
+offset_right = 700.0
+offset_bottom = 237.0
+focus_neighbor_bottom = NodePath("../txtPassword")
+placeholder_text = "UserName"
+
+[node name="txtPassword" type="TextEdit" parent="."]
+layout_mode = 0
+offset_left = 350.0
+offset_top = 306.0
+offset_right = 700.0
+offset_bottom = 344.0
+focus_neighbor_top = NodePath("../txtUserName")
+focus_neighbor_bottom = NodePath("../btnOk")
+placeholder_text = "*********"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 350.0
+offset_top = 162.0
+offset_right = 442.0
+offset_bottom = 195.0
+text = "UserName"
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 0
+offset_left = 350.0
+offset_top = 274.0
+offset_right = 442.0
+offset_bottom = 307.0
+text = "Password"
+
+[node name="btnOk" type="Button" parent="."]
+layout_mode = 0
+offset_left = 350.0
+offset_top = 401.0
+offset_right = 700.0
+offset_bottom = 453.0
+text = "Login"
+
+[node name="req" type="HTTPRequest" parent="."]
+
+[node name="grpError" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label3" type="Label" parent="grpError"]
+modulate = Color(1, 0.0627451, 0.54902, 1)
+layout_mode = 0
+offset_left = 172.0
+offset_top = 460.0
+offset_right = 428.0
+offset_bottom = 520.0
+theme_override_font_sizes/font_size = 30
+text = "Error logging in:"
+
+[node name="lblError" type="Label" parent="grpError"]
+modulate = Color(0.360784, 0.52549, 1, 1)
+layout_mode = 0
+offset_left = 412.0
+offset_top = 460.0
+offset_right = 1128.0
+offset_bottom = 634.0
+theme_override_font_sizes/font_size = 30
+text = "[message]"
+
+[connection signal="pressed" from="btnOk" to="." method="_on_btn_ok_pressed"]
+[connection signal="request_completed" from="req" to="." method="_on_req_request_completed"]
