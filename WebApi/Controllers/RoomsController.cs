@@ -1,6 +1,6 @@
-using System.Collections.Concurrent;
-using Application.Common;
+using Application.Game.Rooms;
 using Domain;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers;
@@ -9,66 +9,41 @@ namespace WebApi.Controllers;
 [Route("[controller]")]
 public class RoomsController : ControllerBase
 {
-    private readonly IUserInfo _userInfo;
-    private static ConcurrentDictionary<string, RoomInfo> _rooms = new();
+    private readonly IMediator _mediator;
 
-    public RoomsController(IUserInfo userInfo)
+    public RoomsController(IMediator mediator)
     {
-        _userInfo = userInfo;
+        _mediator = mediator;
     }
 
     [HttpGet]
-    public IList<RoomInfo> ListPublicRooms()
+    public async Task<IList<RoomInfo>> ListPublicRooms()
     {
-        return _rooms.Values
-            .Where(r => r.Options.IsPublic)
-            .ToList();
+        var rooms = await _mediator.Send(new ListRoomsRequest());
+        return rooms.ToList();
     }
 
     [HttpGet("{roomId}")]
-    public RoomInfo GetRoomInfo([FromRoute] string roomId)
+    public Task<RoomInfo> GetRoomInfo([FromRoute] string roomId)
     {
-        var room = FindRoom(roomId);
-        return room;
+        return _mediator.Send(new GetRoomInfoRequest
+        {
+            RoomId = roomId,
+        });
     }
     
     [HttpPost]
-    public RoomInfo NewRoom()
+    public Task<RoomInfo> NewRoom()
     {
-        if (_rooms.Values.Any(r => r!.Players.Any(p => p.Name == _userInfo.Name)))
-            throw new Exception("user already in a room");
-
-        var room = new RoomInfo();
-        if (!_rooms.TryAdd(room.Id, room))
-            throw new Exception("can't create room");
-
-        JoinRoom(room.Id);
-        return GetRoomInfo(room.Id);
+        return _mediator.Send(new CreateRoomRequest());
     }
     
     [HttpPost("{roomId}/join")]
-    public void JoinRoom([FromRoute] string roomId)
+    public async Task JoinRoom([FromRoute] string roomId)
     {
-        var room = FindRoom(roomId);
-        if (room.IsPlaying)
-            throw new Exception("can't join a room while in game");
-
-        lock (room.Players)
-        {   
-            if (room.Players.Any(p => p.Name == _userInfo.Name))
-                throw new Exception("player already joined this room");
-            room.Players.Add(new Player(_userInfo.Name));
-        }
-    }
-
-    private static RoomInfo FindRoom(string roomId)
-    {
-        if (!_rooms.TryGetValue(roomId, out var room))
-            throw new Exception("error on finding room");
-        
-        if (room is null)
-            throw new Exception("room not found");
-
-        return room;
+        await _mediator.Send(new JoinRoomRequest
+        {
+            RoomId = roomId,
+        });
     }
 }
