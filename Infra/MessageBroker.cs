@@ -1,15 +1,8 @@
 using System.Collections.Concurrent;
 using System.Text.Json;
+using Application.Messaging;
 
-namespace Server.Messaging;
-
-public delegate void ConsumerDelegate(string content);
-
-public interface IMessageBroker
-{
-    void Subscribe(ISubscriptionKey key, ConsumerDelegate callback);
-    void Publish(ISubscriptionKey key, object content);
-}
+namespace Infra;
 
 public class MessageBroker : IMessageBroker
 {
@@ -39,9 +32,20 @@ public class MessageBroker : IMessageBroker
 
         callback(JsonSerializer.Serialize(new DefaultMessage
         {
-            Type = content.GetType().Name,
+            Type = content.GetType().FullName ?? content.GetType().Name,
             Content = JsonSerializer.Serialize(content),
         }));
+    }
+
+    public void Unsubscribe(UserRoomSubKey key)
+    {
+        if (!_register.TryGetValue(key.GetType(), out var typeRegister))
+        {
+            typeRegister = new ConcurrentDictionary<string, ConsumerDelegate>();
+            if (!_register.TryAdd(key.GetType(), typeRegister))
+                throw new Exception("error registering consumers");
+        }
+        typeRegister.TryRemove(key.Parse(), out _);
     }
 
     public class DefaultMessage

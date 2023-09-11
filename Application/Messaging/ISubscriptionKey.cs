@@ -1,4 +1,4 @@
-namespace Server.Messaging;
+namespace Application.Messaging;
 
 public interface ISubscriptionKey
 {

@@ -1,6 +1,6 @@
-using Server.Common;
+using Application.Common;
 
-namespace Server.Middleware;
+namespace WebApi.Middleware;
 
 public class AuthorizationMiddleware : IMiddleware
 {
@@ -23,7 +23,7 @@ public class AuthorizationMiddleware : IMiddleware
         if (string.IsNullOrWhiteSpace(auth) && !context.Request.Path.StartsWithSegments("/login"))
             throw new Exception("user must be logged in");
 
-        _userInfo.Email = auth;
+        _userInfo.Name = auth;
 
         await next(context);
     }

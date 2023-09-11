@@ -1,16 +1,16 @@
 using System.Collections.Concurrent;
+using Application.Common;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
-using Server.Common;
 
-namespace Server.Controllers;
+namespace WebApi.Controllers;
 
 [ApiController]
 [Route("[controller]")]
 public class RoomsController : ControllerBase
 {
     private readonly IUserInfo _userInfo;
-    private static ConcurrentDictionary<string, Room?> _rooms = new();
+    private static ConcurrentDictionary<string, RoomInfo> _rooms = new();
 
     public RoomsController(IUserInfo userInfo)
     {
@@ -21,8 +21,7 @@ public class RoomsController : ControllerBase
     public IList<RoomInfo> ListPublicRooms()
     {
         return _rooms.Values
-            .Where(r => r!.IsPublic)
-            .Select(r => (RoomInfo) r!)
+            .Where(r => r.Options.IsPublic)
             .ToList();
     }
 
@@ -30,16 +29,16 @@ public class RoomsController : ControllerBase
     public RoomInfo GetRoomInfo([FromRoute] string roomId)
     {
         var room = FindRoom(roomId);
-        return (RoomInfo)room;
+        return room;
     }
     
     [HttpPost]
-    public RoomInfo NewRoom([FromBody] bool isPublic)
+    public RoomInfo NewRoom()
     {
-        if (_rooms.Values.Any(r => r!.Players.Any(p => p == _userInfo.Email)))
+        if (_rooms.Values.Any(r => r!.Players.Any(p => p.Name == _userInfo.Name)))
             throw new Exception("user already in a room");
-        
-        var room = new Room(isPublic);
+
+        var room = new RoomInfo();
         if (!_rooms.TryAdd(room.Id, room))
             throw new Exception("can't create room");
 
@@ -56,13 +55,13 @@ public class RoomsController : ControllerBase
 
         lock (room.Players)
         {   
-            if (room.Players.Any(p => p == _userInfo.Email))
+            if (room.Players.Any(p => p.Name == _userInfo.Name))
                 throw new Exception("player already joined this room");
-            room.Players.Add(_userInfo.Email);
+            room.Players.Add(new Player(_userInfo.Name));
         }
     }
 
-    private static Room FindRoom(string roomId)
+    private static RoomInfo FindRoom(string roomId)
     {
         if (!_rooms.TryGetValue(roomId, out var room))
             throw new Exception("error on finding room");
