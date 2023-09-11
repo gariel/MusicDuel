@@ -1,4 +1,4 @@
-using Application.Messaging;
+using Application.Common.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infra;

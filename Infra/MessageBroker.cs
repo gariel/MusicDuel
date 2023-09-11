@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 using System.Text.Json;
-using Application.Messaging;
+using Application.Common.Messaging;
 
 namespace Infra;
 

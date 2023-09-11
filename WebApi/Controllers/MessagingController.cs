@@ -1,5 +1,5 @@
 using Application.Common;
-using Application.Messaging;
+using Application.Common.Messaging;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers;

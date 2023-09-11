@@ -1,4 +1,4 @@
-namespace Application.Messaging;
+namespace Application.Common.Messaging;
 
 public delegate void ConsumerDelegate(string content);
 
