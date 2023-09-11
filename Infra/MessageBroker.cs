@@ -1,11 +1,19 @@
 using System.Collections.Concurrent;
-using System.Text.Json;
+using Application.Common.Interfaces;
 using Application.Common.Messaging;
+using Domain;
 
 namespace Infra;
 
 public class MessageBroker : IMessageBroker
 {
+    private readonly ISerializer _serializer;
+
+    public MessageBroker(ISerializer serializer)
+    {
+        _serializer = serializer;
+    }
+
     private static ConcurrentDictionary<Type, ConcurrentDictionary<string, ConsumerDelegate>> _register = new();
     
     public void Subscribe(ISubscriptionKey key, ConsumerDelegate callback)
@@ -30,10 +38,10 @@ public class MessageBroker : IMessageBroker
         if (!typeRegister.TryGetValue(key.Parse(), out var callback))
             throw new Exception("error recovering consumer");
 
-        callback(JsonSerializer.Serialize(new DefaultMessage
+        callback(_serializer.Serialize(new TypeAwareSerializedObject
         {
             Type = content.GetType().FullName ?? content.GetType().Name,
-            Content = JsonSerializer.Serialize(content),
+            Content = _serializer.Serialize(content),
         }));
     }
 
@@ -45,12 +53,7 @@ public class MessageBroker : IMessageBroker
             if (!_register.TryAdd(key.GetType(), typeRegister))
                 throw new Exception("error registering consumers");
         }
-        typeRegister.TryRemove(key.Parse(), out _);
-    }
 
-    public class DefaultMessage
-    {
-        public string Type { get; set; }
-        public string Content { get; set; }
+        typeRegister.TryRemove(key.Parse(), out _);
     }
 }
