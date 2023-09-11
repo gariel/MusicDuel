@@ -13,6 +13,7 @@ public partial class Rooms : Control
 	private PackedScene _roomListItem;
 	private HttpRequest _req;
 	private HttpRequest _reqCreate;
+	private HttpRequest _reqJoin;
 
 	public override void _Ready()
 	{
@@ -20,6 +21,7 @@ public partial class Rooms : Control
 		_roomListItem = GD.Load<PackedScene>("res://RoomListItem.tscn");
 		_req = GetNode<HttpRequest>("req");
 		_reqCreate = GetNode<HttpRequest>("reqCreate");
+		_reqJoin = GetNode<HttpRequest>("reqJoin");
 		
 		_req.Request(
 			"http://localhost:8888/rooms",
@@ -54,7 +56,7 @@ public partial class Rooms : Control
 		    {
 			    var item = _roomListItem.Instantiate<RoomListItem>();
 			    item.Room = room;
-			    item.OnJoin += Join;
+			    item.OnJoin += RequestAndJoin;
 			    _vbox.AddChild(item);
 		    }
 	    }
@@ -72,6 +74,24 @@ public partial class Rooms : Control
 		    GD.Print(roomInfo.Id);
 			Join(roomInfo);
 	    }
+	}
+
+	public void _on_req_join_request_completed(long result, long responseCode, string[] headers, byte[] body)
+	{
+		GetTree().ChangeSceneToFile("res://Lobby.tscn");
+	}
+	
+	public void RequestAndJoin(RoomInfo room)
+	{
+		GameState.Room = room;
+		_reqJoin.Request(
+			$"http://localhost:8888/rooms/{room.Id}/join",
+			customHeaders: new []
+			{
+				"Content-Type: application/json",
+				$"Authorization: Bearer {GameState.Token}",
+			},
+			method: HttpClient.Method.Post);
 	}
 
 	public void Join(RoomInfo room)

@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://bsny6u4hii4yl"]
+[gd_scene load_steps=2 format=3 uid="uid://bsny6u4hii4yl"]
+
+[ext_resource type="Script" path="res://source/Lobby.cs" id="1_u5i1q"]
 
 [node name="Lobby" type="Control"]
 layout_mode = 3
@@ -7,11 +9,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_u5i1q")
 
-[node name="Label" type="Label" parent="."]
+[node name="lbl" type="Label" parent="."]
 layout_mode = 0
-offset_left = 459.0
-offset_top = 246.0
-offset_right = 593.0
-offset_bottom = 353.0
+offset_left = 163.0
+offset_top = 59.0
+offset_right = 943.0
+offset_bottom = 494.0
 text = "Lobby"

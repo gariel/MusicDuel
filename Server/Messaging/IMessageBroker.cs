@@ -24,8 +24,9 @@ public class MessageBroker : IMessageBroker
                 throw new Exception("error registering consumers");
         }
 
+        typeRegister.TryRemove(key.Parse(), out _);
         if (!typeRegister.TryAdd(key.Parse(), callback))
-            throw new Exception("error registering consuner");
+            throw new Exception("error registering consumer");
     }
 
     public void Publish(ISubscriptionKey key, object content)
@@ -34,7 +35,7 @@ public class MessageBroker : IMessageBroker
             throw new Exception("error recovering registers");
 
         if (!typeRegister.TryGetValue(key.Parse(), out var callback))
-            throw new Exception("error recovering consuner");
+            throw new Exception("error recovering consumer");
 
         callback(JsonSerializer.Serialize(new DefaultMessage
         {
