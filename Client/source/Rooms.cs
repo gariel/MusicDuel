@@ -5,7 +5,8 @@ using System.Text;
 using System.Text.Json;
 using Domain;
 using Godot;
-using MusicDuel;
+
+namespace MusicDuel.source;
 
 public partial class Rooms : Control
 {
@@ -40,40 +41,40 @@ public partial class Rooms : Control
 	{
 		var content = Encoding.UTF8.GetString(body);
 		if (responseCode == (int)HttpStatusCode.OK)
-	    {
-		    foreach (var child in _vbox.GetChildren().ToImmutableArray())
-		    {
-			    _vbox.RemoveChild(child);
-			    child.QueueFree();
-		    }
+		{
+			foreach (var child in _vbox.GetChildren().ToImmutableArray())
+			{
+				_vbox.RemoveChild(child);
+				child.QueueFree();
+			}
 
-		    var rooms = JsonSerializer.Deserialize<List<RoomInfo>>(content, new JsonSerializerOptions
-		    {
-			    PropertyNameCaseInsensitive = true,
-		    });
+			var rooms = JsonSerializer.Deserialize<List<RoomInfo>>(content, new JsonSerializerOptions
+			{
+				PropertyNameCaseInsensitive = true,
+			});
 		    
-		    foreach (var room in rooms)
-		    {
-			    var item = _roomListItem.Instantiate<RoomListItem>();
-			    item.Room = room;
-			    item.OnJoin += RequestAndJoin;
-			    _vbox.AddChild(item);
-		    }
-	    }
+			foreach (var room in rooms)
+			{
+				var item = _roomListItem.Instantiate<RoomListItem>();
+				item.Room = room;
+				item.OnJoin += RequestAndJoin;
+				_vbox.AddChild(item);
+			}
+		}
 	}
 
 	public void _on_req_create_request_completed(long result, long responseCode, string[] headers, byte[] body)
 	{
 		var content = Encoding.UTF8.GetString(body);
 		if (responseCode == (int)HttpStatusCode.OK)
-	    {
-		    var roomInfo = JsonSerializer.Deserialize<RoomInfo>(content, new JsonSerializerOptions
-		    {
-			    PropertyNameCaseInsensitive = true,
-		    });
-		    GD.Print(roomInfo.Id);
+		{
+			var roomInfo = JsonSerializer.Deserialize<RoomInfo>(content, new JsonSerializerOptions
+			{
+				PropertyNameCaseInsensitive = true,
+			});
+			GD.Print(roomInfo.Id);
 			Join(roomInfo);
-	    }
+		}
 	}
 
 	public void _on_req_join_request_completed(long result, long responseCode, string[] headers, byte[] body)

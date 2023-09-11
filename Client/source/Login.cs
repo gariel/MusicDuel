@@ -2,7 +2,8 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using Godot;
-using MusicDuel;
+
+namespace MusicDuel.source;
 
 public partial class Login : Control
 {
@@ -47,22 +48,22 @@ public partial class Login : Control
 	private void _on_req_request_completed(long result, long responseCode, string[] headers, byte[] body)
 	{
 		var content = Encoding.UTF8.GetString(body);
-	    if (responseCode == (int)HttpStatusCode.OK)
-	    {
-	        var json = Json.ParseString(content).AsGodotDictionary();
-	        var token = json["token"].ToString();
+		if (responseCode == (int)HttpStatusCode.OK)
+		{
+			var json = Json.ParseString(content).AsGodotDictionary();
+			var token = json["token"].ToString();
 
-	        GameState.UserName = _txtUserName.Text;
-	        GameState.Token = token;
+			GameState.UserName = _txtUserName.Text;
+			GameState.Token = token;
 
-	        GetTree().ChangeSceneToFile("res://Rooms.tscn");
-	    }
-	    else
-	    {
-		    _lblError.Text = content;
-		    _grpError.Visible = true;
-	    }
-    }
+			GetTree().ChangeSceneToFile("res://Rooms.tscn");
+		}
+		else
+		{
+			_lblError.Text = content;
+			_grpError.Visible = true;
+		}
+	}
 }
 
 public class LoginInformation

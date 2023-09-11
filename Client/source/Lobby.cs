@@ -2,9 +2,9 @@ using System;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading;
 using Godot;
-using MusicDuel;
+
+namespace MusicDuel.source;
 
 public partial class Lobby : Control
 {
@@ -24,18 +24,18 @@ public partial class Lobby : Control
 
 			var req = client.Send(new HttpRequestMessage
 			{
-			    Content = new StringContent(""),
-			    Method = HttpMethod.Post,
-			    RequestUri = new Uri($"http://localhost:8888/games/{GameState.Room.Id}"),
+				Content = new StringContent(""),
+				Method = HttpMethod.Post,
+				RequestUri = new Uri($"http://localhost:8888/messageing/rooms/{GameState.Room.Id}"),
 			},HttpCompletionOption.ResponseHeadersRead);
 			
 			using var stream = req.Content.ReadAsStream();
-		    using var sr = new StreamReader(stream);
-		    while (!sr.EndOfStream)
-		    {
-		        var content = sr.ReadLine();
-		        _buffer += content + "\n";
-		    }
+			using var sr = new StreamReader(stream);
+			while (!sr.EndOfStream)
+			{
+				var content = sr.ReadLine();
+				_buffer += content + "\n";
+			}
 		}), GodotThread.Priority.High);
 	}
 

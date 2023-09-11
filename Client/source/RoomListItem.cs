@@ -2,6 +2,8 @@ using System;
 using Domain;
 using Godot;
 
+namespace MusicDuel.source;
+
 public partial class RoomListItem : HBoxContainer
 {
 	private Label _lblId;
