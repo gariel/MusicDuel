@@ -5,13 +5,13 @@ using WebApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 builder.Services.InjectApplication();
 builder.Services.InjectInfra();
 builder.Services.InjectWebApi();
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
@@ -21,8 +21,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<AuthorizationMiddleware>();
-
-app.UseHttpsRedirection();
-app.UseAuthorization();
 app.MapControllers();
 app.Run();
