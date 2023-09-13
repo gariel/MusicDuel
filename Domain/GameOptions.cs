@@ -7,5 +7,5 @@ public class GameOptions
     public int MaxPlayers { get; set; } = 10;
     public int Rounds { get; set; } = 10;
     
-    public Playlist Playlist { get; set; }
+    public PlaylistInformation PlaylistInformation { get; set; }
 }

@@ -1,10 +1,8 @@
 namespace Domain;
 
-public record Playlist
+public class Playlist
 {
-    public string Url { get; init; }
-    public string Title { get; init; }
-    public string CoverUrl { get; init; }
-    
-    public bool HasMultipleArtits { get; init; }
+    public string Code { get; init; }
+    public Uri Uri => new Uri($"https://open.spotify.com/playlist/{Code}");
+    public string SpotifyKey => $"spotify:playlist:{Code}";
 }
