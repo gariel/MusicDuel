@@ -8,7 +8,10 @@
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:8888",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AUTHENTICATION_KEY": "aVerySecretKeyThatNoBodyWillUseOnProductionOfCourse",
+        "AUTHENTICATION_AUDIENCE": "MusicDuel",
+        "AUTHENTICATION_ISSUER": "MusicDuel"
       }
     }
   }

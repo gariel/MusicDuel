@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Security;
 
 namespace WebApi.Controllers;
 
@@ -6,6 +7,13 @@ namespace WebApi.Controllers;
 [Route("[controller]")]
 public class LoginController : ControllerBase
 {
+    private readonly IAuthenticationTokenManager _authManager;
+
+    public LoginController(IAuthenticationTokenManager authManager)
+    {
+        _authManager = authManager;
+    }
+
     [HttpPost]
     public LoginToken Login([FromBody] LoginInformation info)
     {
@@ -15,7 +23,17 @@ public class LoginController : ControllerBase
         if (string.IsNullOrWhiteSpace(info.Password))
             throw new Exception("empty password");
         
-        return new() { Token = info.UserName };
+        // validation logic
+
+        var token = _authManager.BuildToken(new TokenInfo
+        {
+            UserName = info.UserName,
+        });
+
+        return new LoginToken
+        {
+            Token = token,
+        };
     }
 
     public class LoginInformation
