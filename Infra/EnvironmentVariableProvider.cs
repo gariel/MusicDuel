@@ -2,7 +2,7 @@ using Application.Common.Interfaces;
 
 namespace Infra;
 
-public class EnvInfoProvider : IInfoProvider
+public class EnvironmentVariableProvider : IEnvProvider
 {
     public string StringValue(string key, string @default="")
         => Environment.GetEnvironmentVariable(key) ?? @default;

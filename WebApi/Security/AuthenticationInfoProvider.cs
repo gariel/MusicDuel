@@ -4,15 +4,15 @@ namespace WebApi.Security;
 
 public class AuthenticationInfoProvider : IAuthenticationInfoProvider
 {
-    private readonly IInfoProvider _infoProvider;
+    private readonly IEnvProvider _envProvider;
 
-    public AuthenticationInfoProvider(IInfoProvider infoProvider)
+    public AuthenticationInfoProvider(IEnvProvider envProvider)
     {
-        _infoProvider = infoProvider;
+        _envProvider = envProvider;
     }
 
-    public string AuthenticationKey => _infoProvider.StringValue("AUTHENTICATION_KEY");
-    public string AuthenticationIssuer => _infoProvider.StringValue("AUTHENTICATION_ISSUER");
-    public string AuthenticationAudience => _infoProvider.StringValue("AUTHENTICATION_AUDIENCE");
-    public long AuthenticationExpirationSeconds => _infoProvider.LongValue("AUTHENTICATION_EXPIRATION_SECONDS", 60 * 60);
+    public string AuthenticationKey => _envProvider.StringValue("AUTHENTICATION_KEY");
+    public string AuthenticationIssuer => _envProvider.StringValue("AUTHENTICATION_ISSUER");
+    public string AuthenticationAudience => _envProvider.StringValue("AUTHENTICATION_AUDIENCE");
+    public long AuthenticationExpirationSeconds => _envProvider.LongValue("AUTHENTICATION_EXPIRATION_SECONDS", 60 * 60);
 }

@@ -20,7 +20,7 @@ public partial class Lobby : Control
 		task.Start(Callable.From(() =>
 		{
 			var client = new System.Net.Http.HttpClient();
-			client.DefaultRequestHeaders.Authorization = new  AuthenticationHeaderValue("Bearer", "gabriel");
+			client.DefaultRequestHeaders.Authorization = new  AuthenticationHeaderValue("Bearer", GameState.Token);
 
 			var req = client.Send(new HttpRequestMessage
 			{

@@ -20,7 +20,7 @@ public partial class RoomListItem : HBoxContainer
 		_lblOwner = GetNode<Label>("lblOwner");
 		_btnJoin = GetNode<Button>("btnJoin");
 		
-		_lblId.Text = Room.Id;
+		_lblId.Text = Room.Id.ToString();
 		_lblOwner.Text = Room.Host;
 		_btnJoin.Disabled = Room.IsPlaying;
 	}

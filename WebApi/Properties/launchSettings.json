@@ -11,7 +11,9 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "AUTHENTICATION_KEY": "aVerySecretKeyThatNoBodyWillUseOnProductionOfCourse",
         "AUTHENTICATION_AUDIENCE": "MusicDuel",
-        "AUTHENTICATION_ISSUER": "MusicDuel"
+        "AUTHENTICATION_ISSUER": "MusicDuel",
+        "DATABASE_CONNECTION_STRING": "User ID=postgres;Password=postgres;Host=localhost;Port=5432;Database=music_duel",
+        "SECURITY_SALT_VALUE": "test"
       }
     }
   }

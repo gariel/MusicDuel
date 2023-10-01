@@ -26,6 +26,7 @@ public class AuthorizationMiddleware : IMiddleware
             var token = auth[7..];
             var tokenInfo = _authManager.ValidateToken(token);
 
+            _userInfo.Id = tokenInfo.UserId;
             _userInfo.Name = tokenInfo.UserName;
         }
         

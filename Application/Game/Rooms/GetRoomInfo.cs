@@ -6,7 +6,7 @@ namespace Application.Game.Rooms;
 
 public class GetRoomInfoRequest : IRequest<RoomInfo>
 {
-    public string RoomId { get; set; }
+    public int RoomId { get; set; }
 
     public class GetRoomInfoRequestHandler : IRequestHandler<GetRoomInfoRequest, RoomInfo>
     {

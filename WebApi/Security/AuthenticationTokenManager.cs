@@ -24,7 +24,8 @@ public class AuthenticationTokenManager : IAuthenticationTokenManager
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
-                new(ClaimTypes.Upn, info.UserName),
+                new(ClaimTypes.Upn, info.UserId.ToString()),
+                new(ClaimTypes.Name, info.UserName),
             }),
             Expires = DateTime.UtcNow.AddSeconds(_infoProvider.AuthenticationExpirationSeconds),
             Issuer = _infoProvider.AuthenticationIssuer,
@@ -51,11 +52,12 @@ public class AuthenticationTokenManager : IAuthenticationTokenManager
             }, out var validatedToken);
 
             var secToken = (JwtSecurityToken)validatedToken;
-            var claims = secToken.Claims;
-            
+            var claims = secToken.Claims.ToArray();
+
             return new TokenInfo
             {
-                UserName = claims.First(c => c.Type == "upn").Value,
+                UserId = Convert.ToInt32(claims.First(c => c.Type == "upn").Value),
+                UserName = claims.First(c => c.Type == "unique_name").Value,
             };
         }
         catch (SecurityTokenException st)

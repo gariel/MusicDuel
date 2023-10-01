@@ -24,7 +24,8 @@ public class CreateRoomRequest : IRequest<RoomInfo>
             //     throw new Exception("user already in a room");
 
             var room = new RoomInfo();
-            await _rooms.InsertAsync(room);
+            var id = await _rooms.InsertAsync(room);
+            room.Id = id;
             return room;
         }
     }

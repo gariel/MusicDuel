@@ -1,3 +1,6 @@
+using System.Security.Authentication;
+using Application.Game.Users;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Security;
 
@@ -7,15 +10,17 @@ namespace WebApi.Controllers;
 [Route("[controller]")]
 public class LoginController : ControllerBase
 {
+    private readonly IMediator _mediator;
     private readonly IAuthenticationTokenManager _authManager;
 
-    public LoginController(IAuthenticationTokenManager authManager)
+    public LoginController(IMediator mediator, IAuthenticationTokenManager authManager)
     {
+        _mediator = mediator;
         _authManager = authManager;
     }
 
-    [HttpPost]
-    public LoginToken Login([FromBody] LoginInformation info)
+    [HttpPost("create")]
+    public async Task CreateUser([FromBody] LoginInformation info)
     {
         if (string.IsNullOrWhiteSpace(info.UserName))
             throw new Exception("empty username");
@@ -23,10 +28,34 @@ public class LoginController : ControllerBase
         if (string.IsNullOrWhiteSpace(info.Password))
             throw new Exception("empty password");
         
-        // validation logic
+        await _mediator.Send(new CreateUserRequest
+        {
+            UserName = info.UserName,
+            Password = info.Password,
+        });
+    }
+
+    [HttpPost]
+    public async Task<LoginToken> Login([FromBody] LoginInformation info)
+    {
+        if (string.IsNullOrWhiteSpace(info.UserName))
+            throw new Exception("empty username");
+        
+        if (string.IsNullOrWhiteSpace(info.Password))
+            throw new Exception("empty password");
+
+        var userId = await _mediator.Send(new ValidateUserRequest
+        {
+            UserName = info.UserName,
+            Password = info.Password,
+        });
+
+        if (userId is null)
+            throw new AuthenticationException("User or password didn't match");
 
         var token = _authManager.BuildToken(new TokenInfo
         {
+            UserId = userId.Value,
             UserName = info.UserName,
         });
 

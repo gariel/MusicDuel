@@ -1,13 +1,12 @@
 using Application.Common;
 using Application.Common.Interfaces;
-using Domain;
 using MediatR;
 
 namespace Application.Game.Rooms;
 
 public class JoinRoomRequest : IRequest<Unit>
 {
-    public string RoomId { get; set; }
+    public int RoomId { get; set; }
 
     public class JoinRoomRequestHandler : IRequestHandler<JoinRoomRequest, Unit>
     {
@@ -26,8 +25,7 @@ public class JoinRoomRequest : IRequest<Unit>
             if (room.IsPlaying)
                 throw new Exception("can't join a room while in game");
 
-            var player = new Player(_userInfo.Name);
-            await _rooms.AddPlayerAsync(request.RoomId, player);
+            await _rooms.AddPlayerAsync(request.RoomId, _userInfo.Id);
 
             return Unit.Value;
         }

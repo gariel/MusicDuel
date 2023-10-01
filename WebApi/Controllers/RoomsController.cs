@@ -23,8 +23,8 @@ public class RoomsController : ControllerBase
         return rooms.ToList();
     }
 
-    [HttpGet("{roomId}")]
-    public Task<RoomInfo> GetRoomInfo([FromRoute] string roomId)
+    [HttpGet("{roomId:int}")]
+    public Task<RoomInfo> GetRoomInfo([FromRoute] int roomId)
     {
         return _mediator.Send(new GetRoomInfoRequest
         {
@@ -38,8 +38,8 @@ public class RoomsController : ControllerBase
         return _mediator.Send(new CreateRoomRequest());
     }
     
-    [HttpPost("{roomId}/join")]
-    public async Task JoinRoom([FromRoute] string roomId)
+    [HttpPost("{roomId:int}/join")]
+    public async Task JoinRoom([FromRoute] int roomId)
     {
         await _mediator.Send(new JoinRoomRequest
         {

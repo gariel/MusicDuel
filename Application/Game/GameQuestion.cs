@@ -44,19 +44,19 @@ public class GameQuestionRequest  : IRequest<GameQuestion>
             Func<Music, string> getTitle;
             if (gameRealType == GameType.Artist)
             {
-                var indexes = GetRandomIndexes(4, artists.Count - 1);
+                var indexes = GetRandomIndexes(4, artists.Count);
                 choosen = indexes.Select(i =>
                 {
                     var artistMusics = musics
                         .Where(m => m.Artist == artists[i])
                         .ToArray();
-                    return artistMusics[Random.Shared.Next(artistMusics.Length - 1)];
+                    return artistMusics[Random.Shared.Next(artistMusics.Length)];
                 }).ToArray();
                 getTitle = m => m.Artist;
             }
             else
             {
-                var indexes = GetRandomIndexes(4, musics.Count - 1);
+                var indexes = GetRandomIndexes(4, musics.Count);
                 choosen = indexes
                     .Select(i => musics[i])
                     .ToArray();
